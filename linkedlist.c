@@ -70,6 +70,80 @@ int linkedlist_add(struct linkedlist *head, struct linkedlist *entry)
     return 0;
 }
 
+int linkedlist_remove_index(struct linkedlist *head, int index)
+{
+    int i;
+    struct linkedlist *prev = NULL;
+    struct linkedlist *next = NULL;
+    
+    /* Can't remove from an empty list */
+    if (head == NULL) {
+        fprintf(stderr, "linkedlist: head is null\n");
+        return -1;
+    }
+
+    /* Move to the given index */
+    for (i=0; i<=index; ++i) {
+        head = head->next;
+    }
+
+    /* Get the entries before and after the indexed one */
+    prev = head->prev;
+    next = head->next;
+
+    /* Free the one to remove */
+    if (head->data != NULL) {
+        free(head->data);
+        head->data = NULL;
+    }
+    free(head);
+
+    /* Reconnect the entries before and after */
+    if (prev != NULL) {
+        prev->next = next;
+    }
+    if (next != NULL) {
+        next->prev = prev;
+    }
+}
+
+int linkedlist_remove_pointer(struct linkedlist *head, struct linkedlist *entry)
+{
+    int i;
+    struct linkedlist *prev = NULL;
+    struct linkedlist *next = NULL;
+    
+    /* Can't remove from an empty list */
+    if (head == NULL) {
+        fprintf(stderr, "linkedlist: head is null\n");
+        return -1;
+    }
+
+    /* Move to the given index */
+    while (head != entry && head != NULL) {
+        head = head->next;
+    }
+
+    /* Get the entries before and after the indexed one */
+    prev = head->prev;
+    next = head->next;
+
+    /* Free the one to remove */
+    if (head->data != NULL) {
+        free(head->data);
+        head->data = NULL;
+    }
+    free(head);
+
+    /* Reconnect the entries before and after */
+    if (prev != NULL) {
+        prev->next = next;
+    }
+    if (next != NULL) {
+        next->prev = prev;
+    }
+}
+
 int linkedlist_free(struct linkedlist *head, int freehead)
 {
     struct linkedlist *temp = head;
